@@ -1,0 +1,19 @@
+services:
+  mongodb:
+    image: mongo
+    container_name: mongodb_attendance
+
+    ports:
+      - "27017:27017"
+
+    restart: always
+
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: tanishk
+      MONGO_INITDB_ROOT_PASSWORD: khare
+
+    volumes:
+      - mongo_db:/data/db
+
+volumes:
+  mongo_db:
