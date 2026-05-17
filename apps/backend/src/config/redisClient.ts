@@ -5,7 +5,14 @@ export const redisClient = createClient({
 }) as ReturnType<typeof createClient>;
 
 redisClient.on("error", (err) => {
-  console.log(`redis connection not established`);
+  console.log(`redis connection not established ${err}`);
 });
-await redisClient.connect();
-console.log(`redis connection established`);
+
+redisClient
+  .connect()
+  .then(() => {
+    console.log(`redis client connected`);
+  })
+  .catch((err) => {
+    console.log(`${err} in establishing redis connection`);
+  });
