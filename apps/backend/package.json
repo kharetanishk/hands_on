@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "bun run src/index.ts",
     "build": "tsc",
-    "start": "bun run build && bun run dist/index.js"
+    "start": "bun run build && bun run dist/index.js",
+    "seed:admin": "bun run src/seed/admin.seed.ts"
   },
   "private": true,
   "devDependencies": {
