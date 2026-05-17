@@ -47,7 +47,6 @@ export const registerUser = async (
     const token = jwt.sign(
       {
         id: newUser._id,
-        email: newUser.email,
       },
       JWT_SECRET,
       {
@@ -103,7 +102,11 @@ export const loginUser = async (
         message: `there is no user with this email , try logging in `,
       });
     }
-
+    if (user.role === "admin") {
+    }
+    if (user.role === "teacher") {
+    } else {
+    }
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
@@ -115,7 +118,6 @@ export const loginUser = async (
       {
         id: user._id,
         role: user.role,
-        email: user.email,
       },
       JWT_SECRET,
       {
