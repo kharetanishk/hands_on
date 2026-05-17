@@ -3,7 +3,9 @@ import { UserModel } from "../models/UserModel.js";
 
 export const getUser = async (req: Request, res: Response) => {
   try {
-    const user = UserModel.findById(req.userId).select("_id  username email");
+    const user = UserModel.findById(req.user.userId).select(
+      "_id  username email",
+    );
     if (!user) {
       return res.status(400).json({
         message: `user not found`,

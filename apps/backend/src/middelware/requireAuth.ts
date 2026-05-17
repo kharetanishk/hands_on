@@ -29,7 +29,7 @@ export const requireAuth = (
         message: `no userId in the jwt payload : unauthenticated`,
       });
     }
-    req.userId = parseToken.data.userId;
+    req.user.userId = parseToken.data.userId;
     next();
   } catch (error) {
     console.log(error);
