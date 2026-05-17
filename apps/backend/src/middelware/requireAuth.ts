@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { JwtPayload } from "jsonwebtoken";
-import { z } from "zod";
+import { success, z } from "zod";
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
 const TokenParseSchema = z.object({
@@ -26,7 +26,8 @@ export const requireAuth = (
 
     if (!parseToken.success) {
       return res.status(400).json({
-        message: `no userId in the jwt payload : unauthenticated`,
+        success: false,
+        error: `no userId in the jwt payload : unauthenticated`,
       });
     }
     req.user.userId = parseToken.data.userId;

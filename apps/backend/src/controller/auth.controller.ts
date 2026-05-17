@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { UserModel } from "../models/UserModel.js";
 import { Request, Response } from "express";
+
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
 export const registerUser = async (
@@ -15,7 +16,7 @@ export const registerUser = async (
     if (!parseD.success) {
       const errors = parseD.error.flatten((issue) => issue.message).fieldErrors;
       return res.status(400).json({
-        message: `invalid credentials`,
+        success: false,
         error: errors,
       });
     }
@@ -32,7 +33,8 @@ export const registerUser = async (
 
     if (exsistingUser) {
       return res.status(400).json({
-        message: `useralready exist try logging in `,
+        success: false,
+        error: `useralready exist try logging in `,
       });
     }
 
@@ -62,17 +64,19 @@ export const registerUser = async (
     });
 
     return res.status(200).json({
-      message: `signed up succesfully`,
-      user: newUser,
+      success: true,
+      data: newUser,
     });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
-      message: `something went wrong`,
+      success: false,
+      error: error,
     });
   }
 };
 
+//login controller
 export const loginUser = async (
   req: Request,
   res: Response,
@@ -83,8 +87,8 @@ export const loginUser = async (
     if (!parseD.success) {
       const errors = parseD.error.flatten((issue) => issue.message).fieldErrors;
       return res.status(400).json({
-        message: `invalid credentials`,
-        errors,
+        success: false,
+        error: `invalid credentials ${errors}`,
       });
     }
 
@@ -99,7 +103,8 @@ export const loginUser = async (
 
     if (!user) {
       return res.status(400).json({
-        message: `there is no user with this email , try logging in `,
+        success: false,
+        error: `there is no user with this email , try logging in `,
       });
     }
     if (user.role === "admin") {
@@ -111,7 +116,8 @@ export const loginUser = async (
 
     if (!isMatch) {
       return res.status(400).json({
-        message: `invalid password`,
+        success: false,
+        error: `invalid password`,
       });
     }
     const token = jwt.sign(
@@ -133,13 +139,14 @@ export const loginUser = async (
     });
 
     return res.status(200).json({
-      message: `user logged In`,
-      user: user,
+      success: true,
+      data: user,
     });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
-      message: `somethign went wrong`,
+      success: false,
+      error: `somethign went wrong`,
     });
   }
 };

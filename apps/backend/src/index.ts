@@ -6,6 +6,8 @@ const PORT = process.env.PORT ?? 6000;
 import connectDB from "./mongo/db.js";
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
+import teacherRoutes from "./routes/teacher.routes.js";
+import adminRoutes from "./routes/admin.routes.js";
 
 const app = express();
 
@@ -17,6 +19,8 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/teacher", teacherRoutes);
 
 connectDB();
 app.listen(PORT, () => {

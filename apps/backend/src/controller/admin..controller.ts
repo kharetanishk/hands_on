@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { UserModel } from "../models/UserModel.js";
+import { success } from "zod";
 
 export const promoteTeacher = async (req: Request, res: Response) => {
   try {
@@ -11,7 +12,8 @@ export const promoteTeacher = async (req: Request, res: Response) => {
 
     if (!user) {
       return res.status(400).json({
-        message: `user not found`,
+        success: false,
+        error: `user not found`,
       });
     }
     user.role = "teacher";
@@ -19,12 +21,14 @@ export const promoteTeacher = async (req: Request, res: Response) => {
     await user.save();
 
     return res.status(200).json({
-      message: `user : ${user.username} role changed to teacher`,
+      success: true,
+      data: `user : ${user.username} role changed to teacher -> ${user}`,
     });
   } catch (err) {
     console.log(err);
     return res.status(500).json({
-      message: `soemthing went wrong`,
+      success: false,
+      error: `soemthing went wrong`,
     });
   }
 };

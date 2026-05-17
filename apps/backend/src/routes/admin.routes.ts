@@ -3,7 +3,7 @@ import { requireAuth } from "../middelware/requireAuth.js";
 import { authorize } from "../middelware/authorize.js";
 import { promoteTeacher } from "../controller/admin..controller.js";
 
-const adminRoutes = Router();
+const adminRoutes: Router = Router();
 
 adminRoutes.patch(
   "/promote/:userId",
@@ -11,3 +11,5 @@ adminRoutes.patch(
   authorize("admin"),
   promoteTeacher,
 );
+
+export default adminRoutes;
