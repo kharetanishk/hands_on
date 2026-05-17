@@ -1,9 +1,8 @@
 import { signUpSchema, signInSchema } from "../validation/auth.validate.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { Request, Response } from "express";
 import { UserModel } from "../models/UserModel.js";
-
+import { Request, Response } from "express";
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
 export const registerUser = async (
@@ -11,31 +10,29 @@ export const registerUser = async (
   res: Response,
 ): Promise<Response> => {
   try {
-    const parseData = signUpSchema.safeParse(req.body);
+    const parseD = signUpSchema.safeParse(req.body);
 
-    if (!parseData.success) {
-      const errors = parseData.error.flatten(
-        (issue) => issue.message,
-      ).fieldErrors;
+    if (!parseD.success) {
+      const errors = parseD.error.flatten((issue) => issue.message).fieldErrors;
       return res.status(400).json({
-        message: `Invalid inputs`,
-        errors: errors,
+        message: `invalid credentials`,
+        error: errors,
       });
     }
 
     const { username, email, password } = {
-      username: parseData.data.username.trim(),
-      email: parseData.data.email.trim(),
-      password: parseData.data.password.trim(),
+      username: parseD.data.username.trim(),
+      email: parseD.data.email.trim(),
+      password: parseD.data.password.trim(),
     };
 
-    const existingUser = await UserModel.findOne({
+    const exsistingUser = await UserModel.findOne({
       $or: [{ email }, { username }],
     });
 
-    if (existingUser) {
-      return res.status(200).json({
-        message: "User already exist , try logging in ",
+    if (exsistingUser) {
+      return res.status(400).json({
+        message: `useralready exist try logging in `,
       });
     }
 
@@ -49,7 +46,7 @@ export const registerUser = async (
 
     const token = jwt.sign(
       {
-        userId: newUser._id,
+        id: newUser._id,
         email: newUser.email,
       },
       JWT_SECRET,
@@ -61,12 +58,12 @@ export const registerUser = async (
     res.cookie("token", token, {
       httpOnly: true,
       secure: false,
-      maxAge: 7 * 24 * 60 * 60 * 1000,
       sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000, //7 days
     });
 
     return res.status(200).json({
-      message: `USER SIGNEDUP SUCCESSFULLY`,
+      message: `signed up succesfully`,
       user: newUser,
     });
   } catch (error) {
@@ -77,43 +74,46 @@ export const registerUser = async (
   }
 };
 
-//login function
-export const loginUser = async (req: Request, res: Response) => {
+export const loginUser = async (
+  req: Request,
+  res: Response,
+): Promise<Response> => {
   try {
     const parseD = signInSchema.safeParse(req.body);
 
     if (!parseD.success) {
-      const error = parseD.error.flatten((issue) => issue.message).fieldErrors;
-      return res.status(200).json({
-        message: `invaid sign in inputs`,
-        error: error,
+      const errors = parseD.error.flatten((issue) => issue.message).fieldErrors;
+      return res.status(400).json({
+        message: `invalid credentials`,
+        errors,
       });
     }
+
     const { email, password } = {
-      email: parseD.data.email,
-      password: parseD.data.password,
+      email: parseD.data.email.trim(),
+      password: parseD.data.password.trim(),
     };
 
     const user = await UserModel.findOne({
       email: email,
     });
 
-    if (!user || !user.password) {
+    if (!user) {
       return res.status(400).json({
-        message: `invalid credentials`,
+        message: `there is no user with this email , try logging in `,
       });
     }
+
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
       return res.status(400).json({
-        message: `invalid password , try again`,
+        message: `invalid password`,
       });
     }
-
     const token = jwt.sign(
       {
-        userId: user._id,
+        id: user._id,
         email: user.email,
       },
       JWT_SECRET,
@@ -125,18 +125,18 @@ export const loginUser = async (req: Request, res: Response) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: false,
-      maxAge: 7 * 24 * 60 * 60 * 1000,
       sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     return res.status(200).json({
-      message: `logged in successfully`,
+      message: `user logged In`,
       user: user,
     });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
-      messgae: `something went wrong`,
+      message: `somethign went wrong`,
     });
   }
 };

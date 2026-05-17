@@ -1,24 +1,13 @@
 import { z } from "zod";
 
-export const usernameValidation = z
+const usernameValidation = z
   .string()
-  .min(6, { message: "Username must be at least 6 char longs" })
-  .max(20, { message: "Username cannot exceed 20 characters" })
-  .regex(
-    /^[a-z0-9]{6,20}$/,
-    "Username must not contain special characters or uppercase letters",
-  );
+  .min(3, "username is too short")
+  .max(30, "username too long ");
 
-export const emailValidation = z.email({ message: "Invalid Email" });
+const emailValidation = z.email("INvalid email");
 
-export const passwordValidation = z
-  .string()
-  .min(8, { message: "Password should have minimum length of 8" })
-  .max(15, "Password is too long")
-  .regex(/^(?=.*[A-Z]).{8,}$/, {
-    message:
-      "Should Contain at least one uppercase letter and have a minimum length of 8 characters.",
-  });
+const passwordValidation = z.string().min(5, `the password is too short `);
 
 export const signUpSchema = z.object({
   username: usernameValidation,
@@ -30,7 +19,6 @@ export const signInSchema = z.object({
   email: emailValidation,
   password: passwordValidation,
 });
-
 // type SignUpInput = z.infer<typeof signUpSchema>;
 // type SignInInput = z.infer<typeof signInSchema>;
 
