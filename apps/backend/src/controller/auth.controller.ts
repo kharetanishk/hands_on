@@ -48,7 +48,7 @@ export const registerUser = async (
 
     const token = jwt.sign(
       {
-        id: newUser._id,
+        userId: newUser._id,
       },
       JWT_SECRET,
       {
@@ -122,7 +122,7 @@ export const loginUser = async (
     }
     const token = jwt.sign(
       {
-        id: user._id,
+        userId: user._id,
         role: user.role,
       },
       JWT_SECRET,
