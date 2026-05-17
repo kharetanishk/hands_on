@@ -1,6 +1,30 @@
 import { Request, Response } from "express";
 import { UserModel } from "../models/UserModel.js";
-import { success } from "zod";
+
+export const getAdmin = async (req: Request, res: Response) => {
+  try {
+    const admin = await UserModel.findById(req.user.userId).select(
+      "_id username email",
+    );
+    if (!admin) {
+      return res.status(400).json({
+        success: false,
+        error: `no admin found`,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: admin,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      error: `something went wrong -via adminc controller`,
+    });
+  }
+};
 
 export const promoteTeacher = async (req: Request, res: Response) => {
   try {
