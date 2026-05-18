@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { requireAuth } from "../middelware/requireAuth.js";
 import { authorize } from "../middelware/authorize.js";
-import { getAdmin, promoteTeacher } from "../controller/admin..controller.js";
+import { getAdmin, promoteTeacher } from "../controller/admin.controller.js";
 
 const adminRoutes: Router = Router();
 

@@ -1,7 +1,6 @@
 import { UserModel } from "../models/UserModel.js";
 import { Request, Response } from "express";
 import { SessionService } from "../sessions/sessions.service.js";
-import { success } from "zod";
 
 export const getTeacher = async (req: Request, res: Response) => {
   try {
