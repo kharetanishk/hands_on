@@ -16,6 +16,7 @@
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/redis": "^4.0.11",
+    "@types/socket.io": "^3.0.2",
     "bcrypt": "^6.0.0"
   },
   "peerDependencies": {
@@ -29,6 +30,7 @@
     "mongodb": "^7.2.0",
     "mongoose": "^9.6.2",
     "redis": "^5.12.1",
+    "socket.io": "^4.8.3",
     "zod": "^4.4.3"
   }
 }
