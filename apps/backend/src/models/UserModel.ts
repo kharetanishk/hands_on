@@ -4,7 +4,7 @@ interface User {
   username: string;
   email: string;
   password: string;
-  role: "teacher" | "student";
+  role: "teacher" | "student" | "admin";
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -22,7 +22,7 @@ const UserSchema = new Schema<User>(
     password: { type: String, required: true, minlength: 6 },
     role: {
       type: String,
-      enum: ["teacher", "student"],
+      enum: ["teacher", "student", "admin"],
       required: true,
       default: "student",
     },
