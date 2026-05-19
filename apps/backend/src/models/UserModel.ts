@@ -1,23 +1,33 @@
 import { Schema, model } from "mongoose";
 
-type Roles = "student" | "teacher" | "admin";
-
 interface User {
   username: string;
   email: string;
   password: string;
-  role: Roles;
+  role: "teacher" | "student";
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
-const UserSchema = new Schema<User>({
-  username: { type: String, required: true, unique: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  role: {
-    type: String,
-    enums: ["student", "teacher", "admin"],
-    default: "student",
+const UserSchema = new Schema<User>(
+  {
+    username: { type: String, required: true, unique: true, trim: true },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      match: [/^\S+@\S+\.\S+$/, "Please enter a valid email"],
+    },
+    password: { type: String, required: true, minlength: 6 },
+    role: {
+      type: String,
+      enum: ["teacher", "student"],
+      required: true,
+      default: "student",
+    },
   },
-});
+  { timestamps: true },
+);
 
 export const UserModel = model<User>("user", UserSchema);
